@@ -11,6 +11,5 @@ homepage = "https://github.com/hmzakhalid/lean-imt"
 keywords = ["merkle", "tree", "incremental", "data structure", "cryptography"]
 categories = ["cryptography", "data-structures"]
 readme = "README.md"
-license-file = "LICENSE"
 
 [dependencies]

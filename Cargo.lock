@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "lean_imt"
+name = "lean-imt"
 version = "0.1.0"

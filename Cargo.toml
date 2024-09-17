@@ -8,7 +8,7 @@ description = "A lightweight incremental Merkle tree library."
 documentation = "https://docs.rs/lean-imt"
 repository = "https://github.com/hmzakhalid/lean-imt"
 homepage = "https://github.com/hmzakhalid/lean-imt"
-keywords = ["merkle", "tree", "incremental", "data structure", "cryptography"]
+keywords = ["merkle", "tree", "incremental", "cryptography"]
 categories = ["cryptography", "data-structures"]
 readme = "README.md"
 

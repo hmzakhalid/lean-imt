@@ -1,6 +1,16 @@
 [package]
 name = "lean-imt"
 version = "0.1.0"
+authors = ["Hamza Khalid"]
 edition = "2021"
+license = "MIT"
+description = "A lightweight incremental Merkle tree library."
+documentation = "https://docs.rs/lean-imt"
+repository = "https://github.com/hmzakhalid/lean-imt"
+homepage = "https://github.com/hmzakhalid/lean-imt"
+keywords = ["merkle", "tree", "incremental", "data structure", "cryptography"]
+categories = ["cryptography", "data-structures"]
+readme = "README.md"
+license-file = "LICENSE"
 
 [dependencies]

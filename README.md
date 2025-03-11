@@ -8,7 +8,14 @@ To use LeanIMT, add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-lean_imt = "0.1.0"
+lean_imt = "0.1.1"
+```
+
+If you are using a no_std environment, you can disable the default features:
+
+```toml
+[dependencies]
+lean_imt = { version = "0.1.1", default-features = false }
 ```
 
 ## Usage

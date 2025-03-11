@@ -1,6 +1,6 @@
 [package]
 name = "lean-imt"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Hamza Khalid"]
 edition = "2021"
 license = "MIT"
@@ -13,3 +13,8 @@ categories = ["cryptography", "data-structures"]
 readme = "README.md"
 
 [dependencies]
+hashbrown = "0.15.2"
+
+[features]
+default = ["std"]
+std = []

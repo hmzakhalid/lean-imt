@@ -71,7 +71,6 @@ impl LeanIMT {
             } else {
                 // Else, store the node as side node
                 self.side_nodes.insert(level, node.clone());
-                break;
             }
         }
 
@@ -124,7 +123,10 @@ impl LeanIMT {
                 let left_node = if left_index < current_level_new_nodes.len() {
                     current_level_new_nodes[left_index].clone()
                 } else {
-                    self.side_nodes.get(&level).cloned().unwrap_or("0".to_string())
+                    self.side_nodes
+                        .get(&level)
+                        .cloned()
+                        .unwrap_or("0".to_string())
                 };
 
                 let right_node = if right_index < current_level_new_nodes.len() {
@@ -241,7 +243,11 @@ impl LeanIMT {
     }
 
     /// Removes a leaf from the tree.
-    pub fn remove(&mut self, old_leaf: &IMTNode, sibling_nodes: &[IMTNode]) -> Result<IMTNode, &'static str> {
+    pub fn remove(
+        &mut self,
+        old_leaf: &IMTNode,
+        sibling_nodes: &[IMTNode],
+    ) -> Result<IMTNode, &'static str> {
         self.update(old_leaf, "0".to_string(), sibling_nodes)
     }
 
@@ -312,11 +318,54 @@ mod tests {
     }
 
     #[test]
+    fn test_insert_() {
+        let hash: IMTHashFunction = simple_hash_function;
+        let mut imt = LeanIMT::new(hash);
+
+        assert!(imt.insert("leaf1".to_string()).is_ok());
+        assert_eq!(imt.size, 1);
+        assert_eq!(imt.depth, 0);
+        assert!(imt.has(&"leaf1".to_string()));
+        assert_eq!(imt.root().unwrap(), "leaf1".to_string());
+
+        assert!(imt.insert("leaf2".to_string()).is_ok());
+        assert_eq!(imt.size, 2);
+        assert_eq!(imt.depth, 1);
+        assert!(imt.has(&"leaf2".to_string()));
+        assert_eq!(imt.root().unwrap(), "leaf1,leaf2".to_string());
+
+        assert!(imt.insert("leaf3".to_string()).is_ok());
+        assert_eq!(imt.size, 3);
+        assert_eq!(imt.depth, 2);
+        assert!(imt.has(&"leaf3".to_string()));
+        assert_eq!(imt.root().unwrap(), "leaf1,leaf2,leaf3".to_string());
+
+        assert!(imt.insert("leaf4".to_string()).is_ok());
+        assert_eq!(imt.size, 4);
+        assert_eq!(imt.depth, 2);
+        assert!(imt.has(&"leaf4".to_string()));
+        assert_eq!(imt.root().unwrap(), "leaf1,leaf2,leaf3,leaf4".to_string());
+
+        assert!(imt.insert("leaf5".to_string()).is_ok());
+        assert_eq!(imt.size, 5);
+        assert_eq!(imt.depth, 3);
+        assert!(imt.has(&"leaf5".to_string()));
+        assert_eq!(
+            imt.root().unwrap(),
+            "leaf1,leaf2,leaf3,leaf4,leaf5".to_string()
+        );
+    }
+
+    #[test]
     fn test_insert_many() {
         let hash: IMTHashFunction = simple_hash_function;
         let mut imt = LeanIMT::new(hash);
 
-        let leaves = vec!["leaf1".to_string(), "leaf2".to_string(), "leaf3".to_string()];
+        let leaves = vec![
+            "leaf1".to_string(),
+            "leaf2".to_string(),
+            "leaf3".to_string(),
+        ];
         assert!(imt.insert_many(leaves.clone()).is_ok());
         assert_eq!(imt.size, 3);
         assert_eq!(imt.depth, 2);
@@ -325,10 +374,7 @@ mod tests {
         }
         // Expected root calculation
         let expected_root = simple_hash_function(vec![
-            simple_hash_function(vec![
-                leaves[0].clone(),
-                leaves[1].clone(),
-            ]),
+            simple_hash_function(vec![leaves[0].clone(), leaves[1].clone()]),
             leaves[2].clone(),
         ]);
         assert_eq!(imt.root().unwrap(), expected_root);
@@ -452,12 +498,8 @@ mod tests {
 
         // Update leaf2
         let sibling_nodes = vec!["0".to_string()];
-        imt.update(
-            &"leaf2".to_string(),
-            "leaf3".to_string(),
-            &sibling_nodes,
-        )
-        .unwrap();
+        imt.update(&"leaf2".to_string(), "leaf3".to_string(), &sibling_nodes)
+            .unwrap();
         let root_after_update = imt.root().unwrap();
         assert_eq!(root_after_update, "0,leaf3".to_string());
     }
@@ -477,10 +519,10 @@ mod tests {
         let root_before = imt.root().unwrap();
 
         // Update leaf2
-        let sibling_nodes = vec!["leaf1".to_string(), simple_hash_function(vec![
-            "leaf3".to_string(),
-            "leaf4".to_string(),
-        ])];
+        let sibling_nodes = vec![
+            "leaf1".to_string(),
+            simple_hash_function(vec!["leaf3".to_string(), "leaf4".to_string()]),
+        ];
         imt.update(
             &"leaf2".to_string(),
             "leaf2_updated".to_string(),
@@ -493,10 +535,10 @@ mod tests {
         assert_ne!(root_before, root_after);
 
         // Remove leaf3
-        let sibling_nodes = vec!["leaf4".to_string(), simple_hash_function(vec![
-            "leaf1".to_string(),
-            "leaf2_updated".to_string(),
-        ])];
+        let sibling_nodes = vec![
+            "leaf4".to_string(),
+            simple_hash_function(vec!["leaf1".to_string(), "leaf2_updated".to_string()]),
+        ];
         imt.remove(&"leaf3".to_string(), &sibling_nodes).unwrap();
 
         // Root should change again

@@ -2,20 +2,23 @@
 
 A Lean implementation of an Incremental Merkle Tree (IMT). It supports insertion, deletion, and updating of leaves, all while maintaining the integrity and root hash of the tree. The tree is built using a customizable hash function.
 
+> [!WARNING]
+> This library has not been audited, please use at your own risk.
+
 ## Installation
 
 To use LeanIMT, add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-lean_imt = "0.1.1"
+lean_imt = "0.1.2"
 ```
 
 If you are using a no_std environment, you can disable the default features:
 
 ```toml
 [dependencies]
-lean_imt = { version = "0.1.1", default-features = false }
+lean_imt = { version = "0.1.2", default-features = false }
 ```
 
 ## Usage
